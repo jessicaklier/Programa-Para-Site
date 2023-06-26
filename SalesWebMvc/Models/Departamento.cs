@@ -2,7 +2,7 @@
 {
     public class Departamento
     {
-        public int Indice { get; set; }
+        public int Id { get; set; }
         public string Nome { get; set; }
     }
 }
