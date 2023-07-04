@@ -34,6 +34,12 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]// prevensão de ataque 
         public IActionResult Create(Vendedor vendedor)
         {
+            if (!ModelState.IsValid)
+            {
+                var departamentos = _departamentoService.FindAll();
+                var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
             _vendedorService.Insert(vendedor);
             return RedirectToAction(nameof(Index));
         }
@@ -92,6 +98,12 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Vendedor vendedor)
         {
+            if (!ModelState.IsValid)
+            {
+                var departamentos = _departamentoService.FindAll();
+                var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
             if (id != vendedor.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Incompatibilidade de Id" });
