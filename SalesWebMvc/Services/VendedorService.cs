@@ -41,7 +41,7 @@ namespace SalesWebMvc.Services
                 _context.Vendedor.Remove(obj);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateException) // tinha um e na frente do DBUpdateException
             {
                 throw new IntegrityException("Não pode deletar o vendedor pois ele tem vendas.");
             }

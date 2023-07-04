@@ -2,20 +2,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SalesWebMvc.Services;
 using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
 {
     public class RegistroDeVendasController : Controller
     {
+        private readonly RegistroDeVendaService _registroDeVendaService;
+
+        public RegistroDeVendasController(RegistroDeVendaService registroDeVendaService)
+        {
+            _registroDeVendaService = registroDeVendaService;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult PesquisaSimples()
+        public async Task<IActionResult> PesquisaSimples(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            if (!minDate.HasValue)
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+            if (!maxDate.HasValue)
+            {
+                maxDate = DateTime.Now;
+            }
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+            var result = await _registroDeVendaService.FindBydateAsync(minDate, maxDate);
+            return View(result);
         }
 
         public IActionResult PesquisaDeAgrupamento()
