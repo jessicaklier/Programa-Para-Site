@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using SalesWebMvc.Services;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace SalesWebMvc.Controllers
 {
@@ -36,10 +38,21 @@ namespace SalesWebMvc.Controllers
             var result = await _registroDeVendaService.FindBydateAsync(minDate, maxDate);
             return View(result);
         }
-
-        public IActionResult PesquisaDeAgrupamento()
+  
+        public async Task<IActionResult> PesquisaDeAgrupamento(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            if (!minDate.HasValue)
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+            if (!maxDate.HasValue)
+            {
+                maxDate = DateTime.Now;
+            }
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+            var result = await _registroDeVendaService.FindBydateGroupingAsync(minDate, maxDate);
+            return View(result);
         }
     }
 }
